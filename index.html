@@ -1,88 +1,146 @@
 
+
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Cyber Safety Academy</title>
+<title>Cyber Safety Quiz</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1">
+<style>
+body {
+  background: #101827;
+  color: white;
+  font-family: Arial;
+  text-align: center;
+  padding: 25px;
+}
 
-  <style>
-    body {
-      background: #101827;
-      color: white;
-      font-family: Arial;
-      text-align: center;
-      margin: 0;
-    }
+h1 { color: #00e5ff; }
 
-    header {
-      background: #087e8b;
-      padding: 30px;
-    }
+.quiz {
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 15px;
+}
 
-    section {
-      background: #1e293b;
-      margin: 20px;
-      padding: 20px;
-      border-radius: 12px;
-    }
-
-    h1 { color: #00e5ff; }
-
-    button {
-      background: #00a878;
-      color: white;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 8px;
-    }
-
-    footer {
-      padding: 20px;
-      color: #aaa;
-    }
-  </style>
+button {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 8px;
+  background: #087e8b;
+  color: white;
+  font-size: 16px;
+}
+</style>
 </head>
 
 <body>
 
-<header>
-  <h1>Cyber Safety Academy 🔐</h1>
-  <p>Learn. Protect. Stay Safe.</p>
-</header>
+<h1>🔐 Cyber Safety Quiz</h1>
 
-<section>
-  <h2>🎣 Phishing Awareness</h2>
-  <p>Never trust suspicious links.</p>
-  <p>Always verify a website address.</p>
-</section>
+<div class="quiz">
+  <h2 id="question">Loading...</h2>
 
-<section>
-  <h2>🔑 Password Safety</h2>
-  <p>Use strong and unique passwords.</p>
-  <p>Never share your OTP.</p>
-</section>
+  <div id="answers"></div>
 
-<section>
-  <h2>🛡️ Online Security</h2>
-  <p>Keep your apps updated.</p>
-  <p>Enable Two-Factor Authentication.</p>
-</section>
+  <p id="result"></p>
+  <p id="score"></p>
 
-<section>
-  <h2>Cyber Safety Quiz</h2>
-  <p>Should you share your OTP?</p>
-
-  <button onclick="alert('Correct! Never share your OTP.')">
-    No!
+  <button id="next" onclick="nextQuestion()">
+    Next Question
   </button>
-</section>
+</div>
 
-<footer>
-  <p>Created for Cyber Safety Education</p>
-</footer>
+<script>
+const questions = [
+  {
+    q: "Should you share your OTP?",
+    a: ["Yes", "No", "Sometimes"],
+    correct: 1
+  },
+  {
+    q: "What does HTTPS help provide?",
+    a: ["A secure connection", "Free data", "More battery"],
+    correct: 0
+  },
+  {
+    q: "What is phishing?",
+    a: ["A game", "An online scam", "A browser"],
+    correct: 1
+  }
+];
+
+let current = 0;
+let points = 0;
+let answered = false;
+
+function showQuestion() {
+  answered = false;
+  document.getElementById("question").textContent =
+    questions[current].q;
+
+  document.getElementById("result").textContent = "";
+  document.getElementById("score").textContent =
+    "Score: " + points;
+
+  const area = document.getElementById("answers");
+  area.innerHTML = "";
+
+  questions[current].a.forEach((answer, index) => {
+    const btn = document.createElement("button");
+    btn.textContent = answer;
+    btn.onclick = () => checkAnswer(index);
+    area.appendChild(btn);
+  });
+
+  document.getElementById("next").textContent =
+    current === questions.length - 1 ? "Finish Quiz" : "Next Question";
+}
+
+function checkAnswer(index) {
+  if (answered) return;
+  answered = true;
+
+  if (index === questions[current].correct) {
+    points++;
+    document.getElementById("result").textContent =
+      "Correct! 🎉";
+  } else {
+    document.getElementById("result").textContent =
+      "Not quite! Try the next question.";
+  }
+
+  document.getElementById("score").textContent =
+    "Score: " + points;
+
+}
+
+function nextQuestion() {
+  if (!answered) {
+    document.getElementById("result").textContent =
+      "Please choose an answer first!";
+    return;
+  }
+
+  current++;
+
+  if (current >= questions.length) {
+    document.querySelector(".quiz").innerHTML =
+      "<h2>Quiz Completed! 🎉</h2>" +
+      "<h3>Your Score: " + points + " / " +
+      questions.length + "</h3>" +
+      "<button onclick='location.reload()'>Play Again</button>";
+    return;
+  }
+
+  showQuestion();
+}
+
+showQuestion();
+</script>
 
 </body>
 </html>
-
